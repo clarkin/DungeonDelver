@@ -25,8 +25,11 @@ package
 			while (searching) {
 				this_tile = all_tiles[Math.floor(Math.random() * (all_tiles.length))];
 				//trace("trying " + this_tile.type);
-				if (this_tile.checkExit(entrance)) {
-					searching = false;
+				//target.indexOf(requiredStart) == 0
+				if (this_tile.type.indexOf("corr") == 0 || this_tile.type.indexOf("room") == 0) { 
+					if (this_tile.checkExit(entrance)) {
+						searching = false;
+					}
 				}
 				
 			}
