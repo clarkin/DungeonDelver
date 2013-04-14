@@ -70,10 +70,14 @@ package
 			
 			questionMarks = new FlxSprite(0, 0, questionMarksPNG);
 			explorationChoice.add(questionMarks);
-			var new_tile:Tile = new Tile("corr_fourway", 50, 50);
-			explorationTiles.add(new_tile);
-			new_tile = new Tile("room_fourway", 100, 100);
-			explorationTiles.add(new_tile);
+			var leftButton:FlxButton = new FlxButton(66, 274, "Choose", chooseLeftTile);
+			explorationChoice.add(leftButton);
+			var rightButton:FlxButton = new FlxButton(319, 274, "Choose", chooseRightTile);
+			explorationChoice.add(rightButton);
+			//var new_tile:Tile = new Tile("corr_fourway");
+			//explorationTiles.add(new_tile);
+			//new_tile = new Tile("room_fourway");
+			//explorationTiles.add(new_tile);
 			explorationChoice.add(explorationTiles);
 			explorationChoice.visible = false;
 			
@@ -127,12 +131,16 @@ package
 							
 							explorationTiles.clear();
 							var _new_tile:Tile = tileManager.GetRandomTile(highlight.higlight_entrance);
-							_new_tile.x = choosingHighlight.x - Tile.TILESIZE * 0.8;
-							_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
+							_new_tile.x = 84;
+							_new_tile.y = 168;
+							//_new_tile.x = choosingHighlight.x - Tile.TILESIZE * 0.8;
+							//_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
 							explorationTiles.add(_new_tile);
 							_new_tile = tileManager.GetRandomTile(highlight.higlight_entrance);
-							_new_tile.x = choosingHighlight.x + Tile.TILESIZE * 0.8;
-							_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
+							_new_tile.x = 336;
+							_new_tile.y = 168;
+							//_new_tile.x = choosingHighlight.x + Tile.TILESIZE * 0.8;
+							//_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
 							explorationTiles.add(_new_tile);							
 							explorationChoice.visible = true;							
 						}
@@ -158,6 +166,14 @@ package
 			}
 			
 			//cameraFocus
+		}
+		
+		public function chooseLeftTile():void {
+			chooseTile(explorationTiles.members[0]);
+		}
+		
+		public function chooseRightTile():void {
+			chooseTile(explorationTiles.members[1]);
 		}
 		
 		public function chooseTile(tile:Tile):void {
