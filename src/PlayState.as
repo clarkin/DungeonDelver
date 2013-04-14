@@ -4,14 +4,19 @@ package
 	import flash.filters.GlowFilter;
 	import flash.geom.*;
 	import org.flixel.*;
+	import org.flixel.system.FlxTile;
  
 	public class PlayState extends FlxState
 	{
+		[Embed(source = "../assets/question_marks.png")] private var questionMarksPNG:Class;
+		
 		public var tileManager:TileManager;
 		public var tiles:FlxGroup = new FlxGroup();
 		public var highlights:FlxGroup = new FlxGroup();
-		public var tilesToChoose:FlxGroup = new FlxGroup();
+		public var explorationChoice:FlxGroup = new FlxGroup();
 		public var cameraFocus:FlxSprite = new FlxSprite();
+		public var questionMarks:FlxSprite;
+		public var explorationTiles:FlxGroup = new FlxGroup();
 		
 		public static const starting_point:Point = new Point(210, 420);
 		
@@ -63,11 +68,14 @@ package
 				addTileAt(blank_tile, new_x, new_y);
 			}
 			
-			var tileToChoose:Tile = new Tile("corr_fourway");
-			tilesToChoose.add(tileToChoose);
-			tileToChoose = new Tile("room_fourway");
-			tilesToChoose.add(tileToChoose);
-			tilesToChoose.visible = false;
+			questionMarks = new FlxSprite(0, 0, questionMarksPNG);
+			explorationChoice.add(questionMarks);
+			var new_tile:Tile = new Tile("corr_fourway", 50, 50);
+			explorationTiles.add(new_tile);
+			new_tile = new Tile("room_fourway", 100, 100);
+			explorationTiles.add(new_tile);
+			explorationChoice.add(explorationTiles);
+			explorationChoice.visible = false;
 			
 			//cameraFocus.x = starting_point.x + Tile.TILESIZE;
 			//cameraFocus.y = starting_point.y + Tile.TILESIZE;
@@ -77,7 +85,7 @@ package
 			
 			add(tiles);
 			add(highlights);
-			add(tilesToChoose);
+			add(explorationChoice);
 		}
 		
 		override public function update():void {
@@ -101,9 +109,10 @@ package
 				var clicked_at:FlxPoint = FlxG.mouse.getWorldPosition();
 				//trace("click at " + clicked_at.x + ", " + clicked_at.y);
 				if (choosingTile) {
-					for each (var tileToChoose:Tile in tilesToChoose.members) {
-						if (tileToChoose.overlapsPoint(clicked_at)) {
-							chooseTile(tileToChoose);
+					for each (var explorationTile:Tile in explorationTiles.members) {
+						//trace("checking tile at " + explorationTile.x + ", " + explorationTile.y);
+						if (explorationTile.overlapsPoint(clicked_at)) {
+							chooseTile(explorationTile);
 						}
 					}
 				} else {
@@ -115,17 +124,17 @@ package
 							
 							choosingHighlight = highlight;
 							choosingTile = true;
-							var new_tile:Tile = tileManager.GetRandomTile(highlight.higlight_entrance);
-							new_tile.x = choosingHighlight.x - Tile.TILESIZE * 0.8;
-							new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
-							tilesToChoose.members[0] = new_tile;
-							new_tile = tileManager.GetRandomTile(highlight.higlight_entrance);
-							new_tile.x = choosingHighlight.x + Tile.TILESIZE * 0.8;
-							new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
-							tilesToChoose.members[1] = new_tile;
-							tilesToChoose.visible = true;
 							
-							
+							explorationTiles.clear();
+							var _new_tile:Tile = tileManager.GetRandomTile(highlight.higlight_entrance);
+							_new_tile.x = choosingHighlight.x - Tile.TILESIZE * 0.8;
+							_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
+							explorationTiles.add(_new_tile);
+							_new_tile = tileManager.GetRandomTile(highlight.higlight_entrance);
+							_new_tile.x = choosingHighlight.x + Tile.TILESIZE * 0.8;
+							_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
+							explorationTiles.add(_new_tile);							
+							explorationChoice.visible = true;							
 						}
 					}
 				}
@@ -151,9 +160,9 @@ package
 			//cameraFocus
 		}
 		
-		public function chooseTile(tile):void {
+		public function chooseTile(tile:Tile):void {
 			choosingTile = false;
-			tilesToChoose.visible = false;
+			explorationChoice.visible = false;
 			addTileAt(tile, choosingHighlight.x, choosingHighlight.y);
 			choosingHighlight.kill();
 		}
