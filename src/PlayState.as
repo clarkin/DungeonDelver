@@ -28,6 +28,10 @@ package
 		public var treasure_icon_left:FlxSprite, monster_icon_left:FlxSprite, treasure_icon_right:FlxSprite, monster_icon_right:FlxSprite;
 		public var treasure_icon_label_left:FlxText, monster_icon_label_left:FlxText, treasure_icon_label_right:FlxText, monster_icon_label_right:FlxText; 
 		
+		public var player_treasure:int = 0;
+		public var player_life:int = 5;
+		public var player_treasure_label:FlxText, player_life_label:FlxText;
+		
 		override public function create():void {
 			//FlxG.visualDebug = true;
 			//FlxG.camera.setBounds(0, 0, 462, 462);
@@ -79,7 +83,6 @@ package
 			explorationChoice.add(leftButton);
 			var rightButton:FlxButton = new FlxButton(319, 274, "Choose", chooseRightTile);
 			explorationChoice.add(rightButton);
-			
 			treasure_icon_left = new FlxSprite(66, 225, crownCoinPNG);
 			explorationChoice.add(treasure_icon_left);
 			treasure_icon_label_left = new FlxText(66, 225, 26, "1");
@@ -100,9 +103,15 @@ package
 			monster_icon_label_right = new FlxText(362, 225, 26, "1");
 			monster_icon_label_right.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(monster_icon_label_right);
-			
 			explorationChoice.add(explorationTiles);
 			explorationChoice.visible = false;
+			
+			player_treasure_label = new FlxText(-50, -50, 200, "Treasure: 0");
+			player_treasure_label.setFormat(null, 20, 0xFFFF00, "left", 0x999900);
+			add(player_treasure_label);
+			player_life_label = new FlxText(420, -50, 200, "Life: 5");
+			player_life_label.setFormat(null, 20, 0xFF0000, "left", 0xFFCCCC);
+			add(player_life_label);
 			
 			//cameraFocus.x = starting_point.x + Tile.TILESIZE;
 			//cameraFocus.y = starting_point.y + Tile.TILESIZE;
@@ -117,6 +126,9 @@ package
 		
 		override public function update():void {
 			checkControls();
+			
+			player_treasure_label.text = "Treasure: " + player_treasure;
+			player_life_label.text = "Life: " + player_life;
 			
 			super.update();
 		}
@@ -186,6 +198,8 @@ package
 		public function chooseTile(tile:Tile):void {
 			choosingTile = false;
 			explorationChoice.visible = false;
+			player_treasure += tile.treasure_cards;
+			player_life -= tile.monster_cards;
 			addTileAt(tile, choosingHighlight.x, choosingHighlight.y);
 			choosingHighlight.kill();
 		}
