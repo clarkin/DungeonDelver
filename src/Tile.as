@@ -28,6 +28,12 @@ package
 		public var higlight_entrance:int;
 		
 		public var type:String = "";
+		public var treasure_cards:int = 0;
+		public var monster_cards:int = 0;
+		
+		public static const TREASURE_CHANCE:Array = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3];
+		public static const MONSTER_CHANCE:Array =  [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2];
+		
 		
 		public function Tile(type:String, X:int = 0, Y:int = 0) 
 		{
@@ -123,6 +129,11 @@ package
 					break;
 				default:
 					throw new Error("no matching tile type defined for " + type);
+			}
+			
+			if (type.indexOf("room") == 0) {
+				treasure_cards = TREASURE_CHANCE[Math.floor(Math.random() * (TREASURE_CHANCE.length))];
+				monster_cards = MONSTER_CHANCE[Math.floor(Math.random() * (MONSTER_CHANCE.length))];
 			}
 			
 			this.type = type;

@@ -9,6 +9,8 @@ package
 	public class PlayState extends FlxState
 	{
 		[Embed(source = "../assets/question_marks.png")] private var questionMarksPNG:Class;
+		[Embed(source = "../assets/crown_coin.png")] private var crownCoinPNG:Class;
+		[Embed(source = "../assets/spectre.png")] private var spectrePNG:Class;
 		
 		public var tileManager:TileManager;
 		public var tiles:FlxGroup = new FlxGroup();
@@ -22,6 +24,9 @@ package
 		
 		public var choosingHighlight:Tile;
 		public var choosingTile:Boolean = false;
+		
+		public var treasure_icon_left:FlxSprite, monster_icon_left:FlxSprite, treasure_icon_right:FlxSprite, monster_icon_right:FlxSprite;
+		public var treasure_icon_label_left:FlxText, monster_icon_label_left:FlxText, treasure_icon_label_right:FlxText, monster_icon_label_right:FlxText; 
 		
 		override public function create():void {
 			//FlxG.visualDebug = true;
@@ -74,10 +79,28 @@ package
 			explorationChoice.add(leftButton);
 			var rightButton:FlxButton = new FlxButton(319, 274, "Choose", chooseRightTile);
 			explorationChoice.add(rightButton);
-			//var new_tile:Tile = new Tile("corr_fourway");
-			//explorationTiles.add(new_tile);
-			//new_tile = new Tile("room_fourway");
-			//explorationTiles.add(new_tile);
+			
+			treasure_icon_left = new FlxSprite(66, 225, crownCoinPNG);
+			explorationChoice.add(treasure_icon_left);
+			treasure_icon_label_left = new FlxText(66, 225, 26, "1");
+			treasure_icon_label_left.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
+			explorationChoice.add(treasure_icon_label_left);
+			monster_icon_left = new FlxSprite(110, 225, spectrePNG);
+			explorationChoice.add(monster_icon_left);
+			monster_icon_label_left = new FlxText(110, 225, 26, "1");
+			monster_icon_label_left.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
+			explorationChoice.add(monster_icon_label_left);
+			treasure_icon_right = new FlxSprite(318, 225, crownCoinPNG);
+			explorationChoice.add(treasure_icon_right);
+			treasure_icon_label_right = new FlxText(318, 225, 26, "1");
+			treasure_icon_label_right.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
+			explorationChoice.add(treasure_icon_label_right);
+			monster_icon_right = new FlxSprite(362, 225, spectrePNG);
+			explorationChoice.add(monster_icon_right);
+			monster_icon_label_right = new FlxText(362, 225, 26, "1");
+			monster_icon_label_right.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
+			explorationChoice.add(monster_icon_label_right);
+			
 			explorationChoice.add(explorationTiles);
 			explorationChoice.visible = false;
 			
@@ -125,24 +148,8 @@ package
 						if (highlight.alive && highlight.overlapsPoint(clicked_at)) {
 							//trace("click at " + clicked_at.x + ", " + clicked_at.y);
 							//trace("highlight at " + highlight.x + ", " + highlight.y);
-							
 							choosingHighlight = highlight;
-							choosingTile = true;
-							
-							explorationTiles.clear();
-							var _new_tile:Tile = tileManager.GetRandomTile(highlight.higlight_entrance);
-							_new_tile.x = 84;
-							_new_tile.y = 168;
-							//_new_tile.x = choosingHighlight.x - Tile.TILESIZE * 0.8;
-							//_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
-							explorationTiles.add(_new_tile);
-							_new_tile = tileManager.GetRandomTile(highlight.higlight_entrance);
-							_new_tile.x = 336;
-							_new_tile.y = 168;
-							//_new_tile.x = choosingHighlight.x + Tile.TILESIZE * 0.8;
-							//_new_tile.y = choosingHighlight.y - Tile.TILESIZE / 2;
-							explorationTiles.add(_new_tile);							
-							explorationChoice.visible = true;							
+							showTileChoice();					
 						}
 					}
 				}
@@ -181,6 +188,52 @@ package
 			explorationChoice.visible = false;
 			addTileAt(tile, choosingHighlight.x, choosingHighlight.y);
 			choosingHighlight.kill();
+		}
+		
+		public function showTileChoice():void {
+			choosingTile = true;
+			explorationTiles.clear();  //possible mem leak
+			var _new_tile:Tile = tileManager.GetRandomTile(choosingHighlight.higlight_entrance);
+			_new_tile.x = 84;
+			_new_tile.y = 168;
+			explorationTiles.add(_new_tile);
+			if (_new_tile.treasure_cards > 0) {
+				treasure_icon_label_left.text = _new_tile.treasure_cards.toString();
+				treasure_icon_label_left.visible = true;
+				treasure_icon_left.visible = true;
+			} else {
+				treasure_icon_label_left.visible = false;
+				treasure_icon_left.visible = false;
+			}
+			if (_new_tile.monster_cards > 0) {
+				monster_icon_label_left.text = _new_tile.monster_cards.toString();
+				monster_icon_label_left.visible = true;
+				monster_icon_left.visible = true;
+			} else {
+				monster_icon_label_left.visible = false;
+				monster_icon_left.visible = false;
+			}
+			_new_tile = tileManager.GetRandomTile(choosingHighlight.higlight_entrance);
+			_new_tile.x = 336;
+			_new_tile.y = 168;
+			if (_new_tile.treasure_cards > 0) {
+				treasure_icon_label_right.text = _new_tile.treasure_cards.toString();
+				treasure_icon_label_right.visible = true;
+				treasure_icon_right.visible = true;
+			} else {
+				treasure_icon_label_right.visible = false;
+				treasure_icon_right.visible = false;
+			}
+			if (_new_tile.monster_cards > 0) {
+				monster_icon_label_right.text = _new_tile.monster_cards.toString();
+				monster_icon_label_right.visible = true;
+				monster_icon_right.visible = true;
+			} else {
+				monster_icon_label_right.visible = false;
+				monster_icon_right.visible = false;
+			}
+			explorationTiles.add(_new_tile);							
+			explorationChoice.visible = true;		
 		}
 		
 		public function addTileAt(tile:Tile, X:int, Y:int):void {
