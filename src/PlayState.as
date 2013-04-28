@@ -10,6 +10,7 @@ package
 	public class PlayState extends FlxState
 	{
 		[Embed(source = "../assets/question_marks.png")] private var questionMarksPNG:Class;
+		[Embed(source = "../assets/gui_overlay.png")] private var guiOverlayPNG:Class;
 		[Embed(source = "../assets/crown_coin.png")] private var crownCoinPNG:Class;
 		[Embed(source = "../assets/spectre.png")] private var spectrePNG:Class;
 		
@@ -17,6 +18,7 @@ package
 		public var tiles:FlxGroup = new FlxGroup();
 		public var highlights:FlxGroup = new FlxGroup();
 		public var explorationChoice:FlxGroup = new FlxGroup();
+		public var guiGroup:FlxGroup = new FlxGroup();
 		public var cameraFocus:FlxSprite = new FlxSprite();
 		public var questionMarks:FlxSprite;
 		public var explorationTiles:FlxGroup = new FlxGroup();
@@ -130,15 +132,17 @@ package
 				}
 			}
 			
-			player_treasure_label = new FlxText(0, 0, 200, "Treasure: 0");
-			player_treasure_label.setFormat(null, 20, 0xFFFF00, "left", 0x999900);
-			add(player_treasure_label);
-			leaveBtn = new FlxButtonPlus(330, 6, leaveDungeon, null, "Exit The Dungeon", 140, 20);
+			var guiOverlay:FlxSprite = new FlxSprite(0, 0, guiOverlayPNG);
+			guiGroup.add(guiOverlay);
+			player_treasure_label = new FlxText(6, 6, 200, "Treasure: 0");
+			player_treasure_label.setFormat(null, 20, 0xFFFF00, "left", 0x333300);
+			guiGroup.add(player_treasure_label);
+			leaveBtn = new FlxButtonPlus(330, 10, leaveDungeon, null, "Exit The Dungeon", 140, 20);
 			leaveBtn.width = 200;
-			add(leaveBtn);
-			player_life_label = new FlxText(700, 0, 200, "Life: 5");
-			player_life_label.setFormat(null, 20, 0xFF0000, "left", 0xFFCCCC);
-			add(player_life_label);
+			guiGroup.add(leaveBtn);
+			player_life_label = new FlxText(594, 6, 200, "Life: 5");
+			player_life_label.setFormat(null, 20, 0xFF0000, "right", 0x330000);
+			guiGroup.add(player_life_label);
 			
 			//cameraFocus.x = starting_point.x + Tile.TILESIZE;
 			//cameraFocus.y = starting_point.y + Tile.TILESIZE;
@@ -148,6 +152,7 @@ package
 			
 			add(tiles);
 			add(highlights);
+			add(guiGroup);
 			add(explorationChoice);
 		}
 		
