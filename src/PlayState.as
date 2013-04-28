@@ -34,6 +34,8 @@ package
 		public var player_treasure_label:FlxText, player_life_label:FlxText;
 		
 		public var leaveBtn:FlxButton;
+		public var treasure_tile:Tile;
+		public var treasure_tile_linked:Boolean = false;
 		
 		override public function create():void {
 			//FlxG.visualDebug = true;
@@ -47,8 +49,8 @@ package
 			
 			var starting_tile:Tile = new Tile("corr_dead1");
 			addTileAt(starting_tile, starting_point.x, starting_point.y);
-			var treasure_Tile:Tile = new Tile("spec_treasure");
-			addTileAt(treasure_Tile, starting_point.x, starting_point.y - (Tile.TILESIZE * 8));
+			treasure_tile = new Tile("hint_treasure_room");
+			addTileAt(treasure_tile, starting_point.x, starting_point.y - (Tile.TILESIZE * 8));
 			
 			var blank_tile:Tile;
 			var i:int;
@@ -130,12 +132,13 @@ package
 		}
 		
 		override public function update():void {
-			checkControls();
+			
 			
 			player_treasure_label.text = "Treasure: " + player_treasure;
 			player_life_label.text = "Life: " + player_life;
 			
 			super.update();
+			checkControls();
 		}
 		
 		private function checkControls():void {
@@ -151,7 +154,6 @@ package
 		public function checkMouseClick():void {
 			if (FlxG.mouse.justReleased()) {
 				var clicked_at:FlxPoint = FlxG.mouse.getWorldPosition();
-				//trace("click at " + clicked_at.x + ", " + clicked_at.y);
 				if (choosingTile) {
 					for each (var explorationTile:Tile in explorationTiles.members) {
 						//trace("checking tile at " + explorationTile.x + ", " + explorationTile.y);
@@ -160,14 +162,24 @@ package
 						}
 					}
 				} else {
+					var found_highlight:Boolean = false;
 					for each (var highlight:Tile in highlights.members) {
 						//trace("checking highlight at " + highlight.x + ", " + highlight.y);
 						if (highlight.alive && highlight.overlapsPoint(clicked_at)) {
 							//trace("click at " + clicked_at.x + ", " + clicked_at.y);
 							//trace("highlight at " + highlight.x + ", " + highlight.y);
+							found_highlight = true;
 							choosingHighlight = highlight;
 							showTileChoice();					
-						}
+						} 
+					}
+					if (!found_highlight && treasure_tile.overlapsPoint(clicked_at)) {
+						//trace("exploring treasure room!");
+						player_treasure += 10;
+						
+						var treasure_room_tile:Tile = new Tile("room_treasure")
+						addTileAt(treasure_room_tile, treasure_tile.x, treasure_tile.y);
+						treasure_tile.kill();
 					}
 				}
 			}
@@ -194,10 +206,12 @@ package
 		
 		public function chooseLeftTile():void {
 			chooseTile(explorationTiles.members[0]);
+			FlxG.mouse.reset();
 		}
 		
 		public function chooseRightTile():void {
 			chooseTile(explorationTiles.members[1]);
+			FlxG.mouse.reset();
 		}
 		
 		public function chooseTile(tile:Tile):void {
@@ -292,13 +306,18 @@ package
 						}
 						for each (var this_tile:Tile in tiles.members) {
 							if (this_tile.x == new_x && this_tile.y == new_y) {
+								//trace("direction " + direction + " filled by " + this_tile.type);
+								if (this_tile.type == "hint_treasure_room") {
+									treasure_tile_linked = true;
+								}
 								filled = true;
 								break;
 							}
 						}
 						
-						if (!filled) 
+						if (!filled) { 
 							addHighlight(new_x, new_y, direction);
+						}
 					}
 					
 				}

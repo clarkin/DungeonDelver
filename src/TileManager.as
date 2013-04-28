@@ -27,8 +27,10 @@ package
 				//trace("trying " + this_tile.type);
 				//target.indexOf(requiredStart) == 0
 				if (this_tile.type.indexOf("corr") == 0 || this_tile.type.indexOf("room") == 0) { 
-					if (this_tile.checkExit(entrance)) {
-						searching = false;
+					if (this_tile.type != "room_treasure") {
+						if (this_tile.checkExit(entrance)) {
+							searching = false;
+						}
 					}
 				}
 				

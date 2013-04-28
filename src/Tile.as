@@ -12,8 +12,8 @@ package
 			["corr_dead1","corr_dead2","corr_dead3","corr_dead4","corr_left1","corr_left2","corr_left3","corr_left4", 
 			 "corr_junction1","corr_junction2","corr_junction3","corr_junction4","corr_straight1","corr_straight2","corr_fourway","highlight",
 			 "room_dead1", "room_dead2", "room_dead3", "room_dead4", "room_left1", "room_left2", "room_left3", "room_left4",
-			 "room_junction1", "room_junction2", "room_junction3", "room_junction4", "room_straight1", "room_straight2", "room_fourway", "highlight_hover",
-			 "empty", "spec_treasure"];
+			 "room_junction1", "room_junction2", "room_junction3", "room_junction4", "room_straight1", "room_straight2", "room_fourway", "hint_treasure_room",
+			 "empty", "room_treasure"];
 			 
 		public static const NORTH:int = 1;
 		public static const EAST:int  = 2;
@@ -47,7 +47,7 @@ package
 			switch (type) {
 				case "empty":
 				case "highlight":
-				case "highlight_hover":
+				case "hint_treasure_room":
 					break;
 				case "corr_dead1":
 				case "room_dead1":
@@ -121,7 +121,7 @@ package
 					break;
 				case "corr_fourway":
 				case "room_fourway":
-				case "spec_treasure":
+				case "room_treasure":
 					entry_east = true;
 					entry_west = true;
 					entry_north = true;
