@@ -5,6 +5,7 @@ package
 	import flash.geom.*;
 	import org.flixel.*;
 	import org.flixel.system.FlxTile;
+	import org.flixel.plugin.photonstorm.*;
  
 	public class PlayState extends FlxState
 	{
@@ -33,7 +34,7 @@ package
 		public var player_life:int = 5;
 		public var player_treasure_label:FlxText, player_life_label:FlxText;
 		
-		public var leaveBtn:FlxButton;
+		public var leaveBtn:FlxButtonPlus;
 		public var treasure_tile:Tile;
 		public var treasure_tile_linked:Boolean = false;
 		
@@ -90,9 +91,9 @@ package
 			
 			questionMarks = new FlxSprite(0, 0, questionMarksPNG);
 			explorationChoice.add(questionMarks);
-			var leftButton:FlxButton = new FlxButton(66, 274, "Choose", chooseLeftTile);
+			var leftButton:FlxButtonPlus = new FlxButtonPlus(66, 274, chooseLeftTile, null, "Choose", 80, 20);
 			explorationChoice.add(leftButton);
-			var rightButton:FlxButton = new FlxButton(319, 274, "Choose", chooseRightTile);
+			var rightButton:FlxButtonPlus = new FlxButtonPlus(319, 274, chooseRightTile, null, "Choose", 80, 20);
 			explorationChoice.add(rightButton);
 			treasure_icon_left = new FlxSprite(66, 225, crownCoinPNG);
 			explorationChoice.add(treasure_icon_left);
@@ -132,7 +133,8 @@ package
 			player_treasure_label = new FlxText(0, 0, 200, "Treasure: 0");
 			player_treasure_label.setFormat(null, 20, 0xFFFF00, "left", 0x999900);
 			add(player_treasure_label);
-			leaveBtn = new FlxButton(220, 6, "Leave Now", leaveDungeon);
+			leaveBtn = new FlxButtonPlus(330, 6, leaveDungeon, null, "Exit The Dungeon", 140, 20);
+			leaveBtn.width = 200;
 			add(leaveBtn);
 			player_life_label = new FlxText(700, 0, 200, "Life: 5");
 			player_life_label.setFormat(null, 20, 0xFF0000, "left", 0xFFCCCC);

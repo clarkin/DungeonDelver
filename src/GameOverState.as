@@ -1,6 +1,7 @@
 package
 {
 	import org.flixel.*;
+	import org.flixel.plugin.photonstorm.*;
 
 	public class GameOverState extends FlxState
 	{
@@ -23,12 +24,12 @@ package
 			}
 			
 			var title:FlxText = new FlxText(0, 100, 800, titleString);
-			title.setFormat(null, 24, 0xFF3333CC, "center");
+			title.setFormat(null, 24, 0xFFFF00, "center", 0x999900);
 			
 			var results:FlxText = new FlxText(0, 200, 800, resultsString);
-			results.setFormat(null, 16, 0xFFFFFFCC, "center");
+			results.setFormat(null, 16, 0xFFFF00, "center", 0x999900);
 			
-			var startOverBtn:FlxButton = new FlxButton(350, 400, "Try Again", startGame);
+			var startOverBtn:FlxButtonPlus = new FlxButtonPlus(330, 400, startGame, null, "Try Again", 140, 20); 
 			
 			add(title);
 			add(results);
