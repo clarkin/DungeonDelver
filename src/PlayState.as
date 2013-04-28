@@ -28,9 +28,12 @@ package
 		public var treasure_icon_left:FlxSprite, monster_icon_left:FlxSprite, treasure_icon_right:FlxSprite, monster_icon_right:FlxSprite;
 		public var treasure_icon_label_left:FlxText, monster_icon_label_left:FlxText, treasure_icon_label_right:FlxText, monster_icon_label_right:FlxText; 
 		
+		public var player_alive:Boolean = true;
 		public var player_treasure:int = 0;
 		public var player_life:int = 5;
 		public var player_treasure_label:FlxText, player_life_label:FlxText;
+		
+		public var leaveBtn:FlxButton;
 		
 		override public function create():void {
 			//FlxG.visualDebug = true;
@@ -109,6 +112,8 @@ package
 			player_treasure_label = new FlxText(-50, -50, 200, "Treasure: 0");
 			player_treasure_label.setFormat(null, 20, 0xFFFF00, "left", 0x999900);
 			add(player_treasure_label);
+			leaveBtn = new FlxButton(160, -50, "Leave Now", leaveDungeon);
+			add(leaveBtn);
 			player_life_label = new FlxText(420, -50, 200, "Life: 5");
 			player_life_label.setFormat(null, 20, 0xFF0000, "left", 0xFFCCCC);
 			add(player_life_label);
@@ -200,6 +205,11 @@ package
 			explorationChoice.visible = false;
 			player_treasure += tile.treasure_cards;
 			player_life -= tile.monster_cards;
+			if (player_life <= 0) {
+				player_alive = false;
+				leaveDungeon();
+			}
+			
 			addTileAt(tile, choosingHighlight.x, choosingHighlight.y);
 			choosingHighlight.kill();
 		}
@@ -300,6 +310,10 @@ package
 			var new_highlight:Tile = new Tile("highlight", X, Y);
 			new_highlight.higlight_entrance = Tile.oppositeDirection(from_direction);
 			highlights.add(new_highlight);
+		}
+		
+		public function leaveDungeon():void {
+			FlxG.switchState(new GameOverState(player_treasure, player_alive));
 		}
 	}
 }
