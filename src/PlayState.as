@@ -20,7 +20,7 @@ package
 		public var questionMarks:FlxSprite;
 		public var explorationTiles:FlxGroup = new FlxGroup();
 		
-		public static const starting_point:Point = new Point(210, 420);
+		public static const starting_point:Point = new Point(358, 578);
 		
 		public var choosingHighlight:Tile;
 		public var choosingTile:Boolean = false;
@@ -39,16 +39,22 @@ package
 		
 		override public function create():void {
 			//FlxG.visualDebug = true;
-			//FlxG.camera.setBounds(0, 0, 462, 462);
-			//FlxG.worldBounds = new FlxRect(0, 0, 462, 462);
+			FlxG.camera.setBounds(0, 0, 800, 600);
+			FlxG.worldBounds = new FlxRect(0, 0, 800, 600);
 			
 			tileManager = new TileManager();
 			//for (var i:int = 0; i < 100; i++) {
 			//	var new_tile:Tile = tileManager.GetRandomTile(TileManager.NORTH);
 			//}
 			
-			var starting_tile:Tile = new Tile("corr_dead1");
-			addTileAt(starting_tile, starting_point.x, starting_point.y);
+			var starting_tile:Tile = new Tile("corr_dead1", starting_point.x, starting_point.y);
+			//addTileAt(starting_tile, starting_point.x, starting_point.y);
+			tiles.add(starting_tile);
+			var starting_tile2:Tile = new Tile("corr_straight1", starting_point.x, starting_point.y - Tile.TILESIZE);
+			tiles.add(starting_tile2);
+			//addTileAt(starting_tile2, starting_point.x, starting_point.y - Tile.TILESIZE);
+			var starting_tile3:Tile = new Tile("corr_fourway");
+			addTileAt(starting_tile3, starting_point.x, starting_point.y - Tile.TILESIZE - Tile.TILESIZE);
 			treasure_tile = new Tile("hint_treasure_room");
 			addTileAt(treasure_tile, starting_point.x, starting_point.y - (Tile.TILESIZE * 8));
 			
@@ -56,27 +62,27 @@ package
 			var i:int;
 			var new_x:int = starting_point.x;
 			var new_y:int = starting_point.y;
-			for (i = 1; i <= 5; i++) {
+			for (i = 1; i <= 10; i++) {
 				blank_tile = new Tile("empty");
 				new_x += Tile.TILESIZE;
 				addTileAt(blank_tile, new_x, new_y);
 			}
-			for (i = 1; i <= 10; i++) {
+			for (i = 1; i <= 12; i++) {
 				blank_tile = new Tile("empty");
 				new_y -= Tile.TILESIZE;
 				addTileAt(blank_tile, new_x, new_y);
 			}
-			for (i = 1; i <= 10; i++) {
+			for (i = 1; i <= 19; i++) {
 				blank_tile = new Tile("empty");
 				new_x -= Tile.TILESIZE;
 				addTileAt(blank_tile, new_x, new_y);
 			}
-			for (i = 1; i <= 10; i++) {
+			for (i = 1; i <= 12; i++) {
 				blank_tile = new Tile("empty");
 				new_y += Tile.TILESIZE;
 				addTileAt(blank_tile, new_x, new_y);
 			}
-			for (i = 1; i <= 4; i++) {
+			for (i = 1; i <= 8; i++) {
 				blank_tile = new Tile("empty");
 				new_x += Tile.TILESIZE;
 				addTileAt(blank_tile, new_x, new_y);
@@ -110,13 +116,25 @@ package
 			explorationChoice.add(monster_icon_label_right);
 			explorationChoice.add(explorationTiles);
 			explorationChoice.visible = false;
+			//hack to reposition entire group
+			for each (var object:* in explorationChoice.members) {
+				if (object is FlxGroup) {
+					for each (var object2:* in object.members) {
+						object2.x += 168
+						object2.y += 68
+					}
+				} else {
+					object.x += 168
+					object.y += 68
+				}
+			}
 			
-			player_treasure_label = new FlxText(-50, -50, 200, "Treasure: 0");
+			player_treasure_label = new FlxText(0, 0, 200, "Treasure: 0");
 			player_treasure_label.setFormat(null, 20, 0xFFFF00, "left", 0x999900);
 			add(player_treasure_label);
-			leaveBtn = new FlxButton(160, -50, "Leave Now", leaveDungeon);
+			leaveBtn = new FlxButton(220, 6, "Leave Now", leaveDungeon);
 			add(leaveBtn);
-			player_life_label = new FlxText(420, -50, 200, "Life: 5");
+			player_life_label = new FlxText(700, 0, 200, "Life: 5");
 			player_life_label.setFormat(null, 20, 0xFF0000, "left", 0xFFCCCC);
 			add(player_life_label);
 			
@@ -132,13 +150,12 @@ package
 		}
 		
 		override public function update():void {
-			
+			checkControls();
 			
 			player_treasure_label.text = "Treasure: " + player_treasure;
 			player_life_label.text = "Life: " + player_life;
 			
 			super.update();
-			checkControls();
 		}
 		
 		private function checkControls():void {
@@ -232,8 +249,8 @@ package
 			choosingTile = true;
 			explorationTiles.clear();  //possible mem leak
 			var _new_tile:Tile = tileManager.GetRandomTile(choosingHighlight.higlight_entrance);
-			_new_tile.x = 84;
-			_new_tile.y = 168;
+			_new_tile.x = 252;
+			_new_tile.y = 236;
 			explorationTiles.add(_new_tile);
 			if (_new_tile.treasure_cards > 0) {
 				treasure_icon_label_left.text = _new_tile.treasure_cards.toString();
@@ -252,8 +269,8 @@ package
 				monster_icon_left.visible = false;
 			}
 			_new_tile = tileManager.GetRandomTile(choosingHighlight.higlight_entrance);
-			_new_tile.x = 336;
-			_new_tile.y = 168;
+			_new_tile.x = 504;
+			_new_tile.y = 236;
 			if (_new_tile.treasure_cards > 0) {
 				treasure_icon_label_right.text = _new_tile.treasure_cards.toString();
 				treasure_icon_label_right.visible = true;
