@@ -46,20 +46,18 @@ package
 			FlxG.worldBounds = new FlxRect(0, 0, 800, 600);
 			
 			tileManager = new TileManager();
-			//for (var i:int = 0; i < 100; i++) {
-			//	var new_tile:Tile = tileManager.GetRandomTile(TileManager.NORTH);
-			//}
+			
+			treasure_tile = new Tile("hint_treasure_room");
+			var rand_x:int = Math.floor(Math.random() * 8) - 3;
+			var rand_y:int = Math.floor(Math.random() * 4) + 8;
+			addTileAt(treasure_tile, starting_point.x + (Tile.TILESIZE * rand_x), starting_point.y - (Tile.TILESIZE * rand_y));
 			
 			var starting_tile:Tile = new Tile("corr_dead1", starting_point.x, starting_point.y);
-			//addTileAt(starting_tile, starting_point.x, starting_point.y);
 			tiles.add(starting_tile);
-			var starting_tile2:Tile = new Tile("corr_straight1", starting_point.x, starting_point.y - Tile.TILESIZE);
-			tiles.add(starting_tile2);
-			//addTileAt(starting_tile2, starting_point.x, starting_point.y - Tile.TILESIZE);
-			var starting_tile3:Tile = new Tile("corr_fourway");
-			addTileAt(starting_tile3, starting_point.x, starting_point.y - Tile.TILESIZE - Tile.TILESIZE);
-			treasure_tile = new Tile("hint_treasure_room");
-			addTileAt(treasure_tile, starting_point.x, starting_point.y - (Tile.TILESIZE * 8));
+			starting_tile = new Tile("corr_straight1", starting_point.x, starting_point.y - Tile.TILESIZE);
+			tiles.add(starting_tile);
+			starting_tile = new Tile("corr_fourway");
+			addTileAt(starting_tile, starting_point.x, starting_point.y - Tile.TILESIZE - Tile.TILESIZE);
 			
 			var blank_tile:Tile;
 			var i:int;
@@ -197,7 +195,7 @@ package
 							showTileChoice();					
 						} 
 					}
-					if (!found_highlight && treasure_tile.overlapsPoint(clicked_at)) {
+					if (treasure_tile_linked && !found_highlight && treasure_tile.overlapsPoint(clicked_at)) {
 						//trace("exploring treasure room!");
 						player_treasure += 10;
 						
