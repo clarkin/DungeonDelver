@@ -104,46 +104,47 @@ package
 				addTileAt(blank_tile, new_x, new_y);
 			}
 			
-			questionMarks = new FlxSprite(0, 0, ARTquestionMarks);
+			questionMarks = new FlxSprite(6, 98, ARTquestionMarks);
 			explorationChoice.add(questionMarks);
-			var leftButton:FlxButtonPlus = new FlxButtonPlus(66, 274, chooseLeftTile, null, "Choose", 80, 20);
+			var title:FlxText = new FlxText(0, 160, 800, "CHOOSE A TILE");
+			title.setFormat("Popup", 36, 0x5C3425, "center", 0);
+			explorationChoice.add(title);
+			var leftButton:FlxButtonPlus = new FlxButtonPlus(236, 389, chooseLeftTile, null, "CHOOSE", 80, 20);
+			leftButton.textNormal.setFormat("Popup", 12, 0x5C3425, "center", 0);
+			leftButton.textHighlight.setFormat("Popup", 12, 0x5C3425, "center", 0);
+			leftButton.borderColor = 0xFF5C3425;
+			leftButton.updateInactiveButtonColors([0xFFC2A988, 0xFFFFFFCC]);
+			leftButton.updateActiveButtonColors([0xFFD54DFF, 0xFFF9E6FF]);
 			explorationChoice.add(leftButton);
-			var rightButton:FlxButtonPlus = new FlxButtonPlus(319, 274, chooseRightTile, null, "Choose", 80, 20);
+			var rightButton:FlxButtonPlus = new FlxButtonPlus(489, 389, chooseRightTile, null, "CHOOSE", 80, 20);
+			rightButton.textNormal.setFormat("Popup", 12, 0x5C3425, "center", 0);
+			rightButton.textHighlight.setFormat("Popup", 12, 0x5C3425, "center", 0);
+			rightButton.borderColor = 0xFF5C3425;
+			rightButton.updateInactiveButtonColors([0xFFC2A988, 0xFFFFFFCC]);
+			rightButton.updateActiveButtonColors([0xFFD54DFF, 0xFFF9E6FF]);
 			explorationChoice.add(rightButton);
-			treasure_icon_left = new FlxSprite(66, 225, ARTcrownCoin);
+			treasure_icon_left = new FlxSprite(236, 340, ARTcrownCoin);
 			explorationChoice.add(treasure_icon_left);
-			treasure_icon_label_left = new FlxText(66, 225, 26, "1");
+			treasure_icon_label_left = new FlxText(236, 340, 26, "1");
 			treasure_icon_label_left.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(treasure_icon_label_left);
-			monster_icon_left = new FlxSprite(110, 225, ARTspectre);
+			monster_icon_left = new FlxSprite(280, 340, ARTspectre);
 			explorationChoice.add(monster_icon_left);
-			monster_icon_label_left = new FlxText(110, 225, 26, "1");
+			monster_icon_label_left = new FlxText(280, 340, 26, "1");
 			monster_icon_label_left.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(monster_icon_label_left);
-			treasure_icon_right = new FlxSprite(318, 225, ARTcrownCoin);
+			treasure_icon_right = new FlxSprite(488, 340, ARTcrownCoin);
 			explorationChoice.add(treasure_icon_right);
-			treasure_icon_label_right = new FlxText(318, 225, 26, "1");
+			treasure_icon_label_right = new FlxText(488, 340, 26, "1");
 			treasure_icon_label_right.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(treasure_icon_label_right);
-			monster_icon_right = new FlxSprite(362, 225, ARTspectre);
+			monster_icon_right = new FlxSprite(532, 340, ARTspectre);
 			explorationChoice.add(monster_icon_right);
-			monster_icon_label_right = new FlxText(362, 225, 26, "1");
+			monster_icon_label_right = new FlxText(532, 340, 26, "1");
 			monster_icon_label_right.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(monster_icon_label_right);
 			explorationChoice.add(explorationTiles);
 			explorationChoice.visible = false;
-			//hack to reposition entire group
-			for each (var object:* in explorationChoice.members) {
-				if (object is FlxGroup) {
-					for each (var object2:* in object.members) {
-						object2.x += 168
-						object2.y += 68
-					}
-				} else {
-					object.x += 168
-					object.y += 68
-				}
-			}
 			
 			var guiOverlay:FlxSprite = new FlxSprite(0, 0, ARTguiOverlay);
 			guiGroup.add(guiOverlay);
@@ -294,7 +295,7 @@ package
 			explorationTiles.clear();  //possible mem leak
 			var _new_tile:Tile = tileManager.GetRandomTile(choosingHighlight.higlight_entrance);
 			_new_tile.x = 252;
-			_new_tile.y = 236;
+			_new_tile.y = 283;
 			explorationTiles.add(_new_tile);
 			if (_new_tile.treasure_cards > 0) {
 				treasure_icon_label_left.text = _new_tile.treasure_cards.toString();
@@ -314,7 +315,7 @@ package
 			}
 			_new_tile = tileManager.GetRandomTile(choosingHighlight.higlight_entrance);
 			_new_tile.x = 504;
-			_new_tile.y = 236;
+			_new_tile.y = 283;
 			if (_new_tile.treasure_cards > 0) {
 				treasure_icon_label_right.text = _new_tile.treasure_cards.toString();
 				treasure_icon_label_right.visible = true;
