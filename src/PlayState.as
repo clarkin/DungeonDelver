@@ -6,6 +6,8 @@ package
 	import org.flixel.*;
 	import org.flixel.system.FlxTile;
 	import org.flixel.plugin.photonstorm.*;
+	import org.as3wavsound.*;
+	import flash.utils.ByteArray;
  
 	public class PlayState extends FlxState
 	{
@@ -13,6 +15,21 @@ package
 		[Embed(source = "../assets/gui_overlay.png")] private var guiOverlayPNG:Class;
 		[Embed(source = "../assets/crown_coin.png")] private var crownCoinPNG:Class;
 		[Embed(source = "../assets/spectre.png")] private var spectrePNG:Class;
+		
+		[Embed(source = "../assets/cheer.wav", mimeType = "application/octet-stream")] private const WAVcheer:Class;
+		[Embed(source = "../assets/coins.wav", mimeType = "application/octet-stream")] private const WAVcoins:Class;
+		[Embed(source = "../assets/deathscream.wav", mimeType = "application/octet-stream")] private const WAVdeathscream:Class;
+		[Embed(source = "../assets/doorcreak.wav", mimeType = "application/octet-stream")] private const WAVdoorcreak:Class;
+		[Embed(source = "../assets/footsteps.wav", mimeType = "application/octet-stream")] private const WAVfootsteps:Class;
+		[Embed(source = "../assets/lots_of_coins.wav", mimeType = "application/octet-stream")] private const WAVlotsofcoins:Class;
+		[Embed(source = "../assets/sword_kill.wav", mimeType = "application/octet-stream")] private const WAVswordkill:Class;
+		public var sndCheer:WavSound;
+		public var sndCoins:WavSound;
+		public var sndDeathscream:WavSound;
+		public var sndDoorcreak:WavSound;
+		public var sndFootsteps:WavSound;
+		public var sndLotsofcoins:WavSound;
+		public var sndSwordkill:WavSound;
 		
 		public var tileManager:TileManager;
 		public var tiles:FlxGroup = new FlxGroup();
@@ -142,6 +159,14 @@ package
 			player_life_label.setFormat(null, 20, 0xFF0000, "right", 0x330000);
 			guiGroup.add(player_life_label);
 			
+			sndCheer = new WavSound(new WAVcheer() as ByteArray);
+			sndCoins = new WavSound(new WAVcoins() as ByteArray);
+			sndDeathscream = new WavSound(new WAVdeathscream() as ByteArray);
+			sndDoorcreak = new WavSound(new WAVdoorcreak() as ByteArray);
+			sndFootsteps = new WavSound(new WAVfootsteps() as ByteArray);
+			sndLotsofcoins = new WavSound(new WAVlotsofcoins() as ByteArray);
+			sndSwordkill = new WavSound(new WAVswordkill() as ByteArray);
+			
 			//cameraFocus.x = starting_point.x + Tile.TILESIZE;
 			//cameraFocus.y = starting_point.y + Tile.TILESIZE;
 			//FlxG.camera.follow(cameraFocus, FlxCamera.STYLE_TOPDOWN_TIGHT);
@@ -198,6 +223,7 @@ package
 					if (treasure_tile_linked && !found_highlight && treasure_tile.overlapsPoint(clicked_at)) {
 						//trace("exploring treasure room!");
 						player_treasure += 10;
+						sndLotsofcoins.play();
 						
 						var treasure_room_tile:Tile = new Tile("room_treasure")
 						addTileAt(treasure_room_tile, treasure_tile.x, treasure_tile.y);
@@ -244,6 +270,16 @@ package
 			if (player_life <= 0) {
 				player_alive = false;
 				leaveDungeon();
+			}
+			
+			if (tile.monster_cards > 0) {
+				sndSwordkill.play();
+			} else if (tile.treasure_cards > 0) {
+				sndCoins.play();
+			} else if (tile.type.indexOf("room") == 0) {
+				sndDoorcreak.play();
+			} else if (tile.type.indexOf("corr") == 0) {
+				sndFootsteps.play();
 			}
 			
 			addTileAt(tile, choosingHighlight.x, choosingHighlight.y);
@@ -354,6 +390,11 @@ package
 		}
 		
 		public function leaveDungeon():void {
+			if (player_alive) {
+				sndCheer.play();
+			} else {
+				sndDeathscream.play();
+			}
 			FlxG.switchState(new GameOverState(player_treasure, player_alive));
 		}
 	}
