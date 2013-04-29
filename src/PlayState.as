@@ -4,17 +4,16 @@ package
 	import flash.filters.GlowFilter;
 	import flash.geom.*;
 	import org.flixel.*;
-	import org.flixel.system.FlxTile;
 	import org.flixel.plugin.photonstorm.*;
 	import org.as3wavsound.*;
 	import flash.utils.ByteArray;
  
 	public class PlayState extends FlxState
 	{
-		[Embed(source = "../assets/question_marks.png")] private var questionMarksPNG:Class;
-		[Embed(source = "../assets/gui_overlay.png")] private var guiOverlayPNG:Class;
-		[Embed(source = "../assets/crown_coin.png")] private var crownCoinPNG:Class;
-		[Embed(source = "../assets/spectre.png")] private var spectrePNG:Class;
+		[Embed(source = "../assets/question_marks.png")] private var ARTquestionMarks:Class;
+		[Embed(source = "../assets/gui_overlay.png")] private var ARTguiOverlay:Class;
+		[Embed(source = "../assets/crown_coin.png")] private var ARTcrownCoin:Class;
+		[Embed(source = "../assets/spectre.png")] private var ARTspectre:Class;
 		
 		[Embed(source = "../assets/cheer.wav", mimeType = "application/octet-stream")] private const WAVcheer:Class;
 		[Embed(source = "../assets/coins.wav", mimeType = "application/octet-stream")] private const WAVcoins:Class;
@@ -53,7 +52,6 @@ package
 		public var player_life:int = 5;
 		public var player_treasure_label:FlxText, player_life_label:FlxText;
 		
-		public var leaveBtn:FlxButtonPlus;
 		public var treasure_tile:Tile;
 		public var treasure_tile_linked:Boolean = false;
 		
@@ -106,28 +104,28 @@ package
 				addTileAt(blank_tile, new_x, new_y);
 			}
 			
-			questionMarks = new FlxSprite(0, 0, questionMarksPNG);
+			questionMarks = new FlxSprite(0, 0, ARTquestionMarks);
 			explorationChoice.add(questionMarks);
 			var leftButton:FlxButtonPlus = new FlxButtonPlus(66, 274, chooseLeftTile, null, "Choose", 80, 20);
 			explorationChoice.add(leftButton);
 			var rightButton:FlxButtonPlus = new FlxButtonPlus(319, 274, chooseRightTile, null, "Choose", 80, 20);
 			explorationChoice.add(rightButton);
-			treasure_icon_left = new FlxSprite(66, 225, crownCoinPNG);
+			treasure_icon_left = new FlxSprite(66, 225, ARTcrownCoin);
 			explorationChoice.add(treasure_icon_left);
 			treasure_icon_label_left = new FlxText(66, 225, 26, "1");
 			treasure_icon_label_left.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(treasure_icon_label_left);
-			monster_icon_left = new FlxSprite(110, 225, spectrePNG);
+			monster_icon_left = new FlxSprite(110, 225, ARTspectre);
 			explorationChoice.add(monster_icon_left);
 			monster_icon_label_left = new FlxText(110, 225, 26, "1");
 			monster_icon_label_left.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(monster_icon_label_left);
-			treasure_icon_right = new FlxSprite(318, 225, crownCoinPNG);
+			treasure_icon_right = new FlxSprite(318, 225, ARTcrownCoin);
 			explorationChoice.add(treasure_icon_right);
 			treasure_icon_label_right = new FlxText(318, 225, 26, "1");
 			treasure_icon_label_right.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
 			explorationChoice.add(treasure_icon_label_right);
-			monster_icon_right = new FlxSprite(362, 225, spectrePNG);
+			monster_icon_right = new FlxSprite(362, 225, ARTspectre);
 			explorationChoice.add(monster_icon_right);
 			monster_icon_label_right = new FlxText(362, 225, 26, "1");
 			monster_icon_label_right.setFormat(null, 8, 0xFFFFFF, "left", 0x666666);
@@ -147,16 +145,21 @@ package
 				}
 			}
 			
-			var guiOverlay:FlxSprite = new FlxSprite(0, 0, guiOverlayPNG);
+			var guiOverlay:FlxSprite = new FlxSprite(0, 0, ARTguiOverlay);
 			guiGroup.add(guiOverlay);
-			player_treasure_label = new FlxText(6, 6, 200, "Treasure: 0");
-			player_treasure_label.setFormat(null, 20, 0xFFFF00, "left", 0x333300);
+			player_treasure_label = new FlxText(6, 6, 300, "Treasure: 0");
+			player_treasure_label.setFormat("Popup", 30, 0x5C3425, "left", 0x000000);
 			guiGroup.add(player_treasure_label);
-			leaveBtn = new FlxButtonPlus(330, 10, leaveDungeon, null, "Exit The Dungeon", 140, 20);
-			leaveBtn.width = 200;
+			var leaveBtn:FlxButtonPlus = new FlxButtonPlus(330, 10, leaveDungeon, null, "Leave The Dungeon", 220, 24);
+			leaveBtn.textNormal.setFormat("Popup", 16, 0x5C3425, "center", 0);
+			leaveBtn.textHighlight.setFormat("Popup", 16, 0x5C3425, "center", 0);
+			leaveBtn.borderColor = 0xFF5C3425;
+			leaveBtn.updateInactiveButtonColors([0xFFC2A988, 0xFFFFFFCC]);
+			leaveBtn.updateActiveButtonColors([0xFFD54DFF, 0xFFF9E6FF]);	
+			leaveBtn.screenCenter();
 			guiGroup.add(leaveBtn);
-			player_life_label = new FlxText(594, 6, 200, "Life: 5");
-			player_life_label.setFormat(null, 20, 0xFF0000, "right", 0x330000);
+			player_life_label = new FlxText(494, 6, 300, "Life: 5");
+			player_life_label.setFormat("Popup", 30, 0x5C3425, "right", 0x000000);
 			guiGroup.add(player_life_label);
 			
 			sndCheer = new WavSound(new WAVcheer() as ByteArray);
@@ -236,7 +239,7 @@ package
 		public function checkKeyboard():void {
 			if (FlxG.keys.justReleased("SPACE")) {
 				trace("*** RESET ***");
-				FlxG.switchState(new PlayState);
+				FlxG.switchState(new MenuState);
 			} else if (FlxG.keys.pressed("UP")) {
 				cameraFocus.acceleration.y -= 50;
 			} else if (FlxG.keys.pressed("RIGHT")) {
@@ -395,7 +398,7 @@ package
 			} else {
 				sndDeathscream.play();
 			}
-			FlxG.switchState(new GameOverState(player_treasure, player_alive));
+			FlxG.switchState(new MenuState(true, player_alive, player_treasure));
 		}
 	}
 }
