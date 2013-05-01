@@ -224,13 +224,14 @@ package
 							showTileChoice();					
 						} 
 					}
-					if (treasure_tile_linked && !found_highlight && treasure_tile.overlapsPoint(clicked_at)) {
+					if (treasure_tile_linked && treasure_tile.alive && !found_highlight && treasure_tile.overlapsPoint(clicked_at)) {
 						//trace("exploring treasure room!");
 						player_treasure += 10;
 						sndLotsofcoins.play();
 						
 						var treasure_room_tile:Tile = new Tile("room_treasure")
 						addTileAt(treasure_room_tile, treasure_tile.x, treasure_tile.y);
+						treasure_tile_linked = false;
 						treasure_tile.kill();
 					}
 				}
