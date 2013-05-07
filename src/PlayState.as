@@ -35,7 +35,6 @@ package
 		public var highlights:FlxGroup = new FlxGroup();
 		public var explorationChoice:FlxGroup = new FlxGroup();
 		public var guiGroup:FlxGroup = new FlxGroup();
-		public var cameraFocus:FlxSprite = new FlxSprite();
 		public var questionMarks:FlxSprite;
 		public var explorationTiles:FlxGroup = new FlxGroup();
 		
@@ -170,13 +169,7 @@ package
 			sndFootsteps = new WavSound(new WAVfootsteps() as ByteArray);
 			sndLotsofcoins = new WavSound(new WAVlotsofcoins() as ByteArray);
 			sndSwordkill = new WavSound(new WAVswordkill() as ByteArray);
-			
-			//cameraFocus.x = starting_point.x + Tile.TILESIZE;
-			//cameraFocus.y = starting_point.y + Tile.TILESIZE;
-			//FlxG.camera.follow(cameraFocus, FlxCamera.STYLE_TOPDOWN_TIGHT);
-			//add(cameraFocus); //todo move camera directly rather than following fake sprite
-			FlxG.camera.focusOn(new FlxPoint(210 + Tile.TILESIZE / 2, 210 + Tile.TILESIZE / 2));
-			
+
 			add(tiles);
 			add(highlights);
 			add(guiGroup);
@@ -235,6 +228,7 @@ package
 						treasure_tile.kill();
 					}
 				}
+				
 			}
 		}
 		
@@ -242,29 +236,19 @@ package
 			if (FlxG.keys.justReleased("SPACE")) {
 				trace("*** RESET ***");
 				FlxG.switchState(new MenuState);
-			} else if (FlxG.keys.pressed("UP")) {
-				cameraFocus.acceleration.y -= 50;
-			} else if (FlxG.keys.pressed("RIGHT")) {
-				cameraFocus.acceleration.x += 50;
-			} else if (FlxG.keys.pressed("DOWN")) {
-				cameraFocus.acceleration.y += 50;
-			} else if (FlxG.keys.pressed("LEFT")) {
-				cameraFocus.acceleration.x -= 50;
-			} else {
-				cameraFocus.acceleration.x = cameraFocus.acceleration.y = cameraFocus.velocity.x = cameraFocus.velocity.y = 0;
-			}
-			
-			//cameraFocus
+			} 
 		}
 		
 		public function chooseLeftTile():void {
-			chooseTile(explorationTiles.members[0]);
-			FlxG.mouse.reset();
+			if (choosingTile) {
+				chooseTile(explorationTiles.members[0]);
+			}
 		}
 		
 		public function chooseRightTile():void {
-			chooseTile(explorationTiles.members[1]);
-			FlxG.mouse.reset();
+			if (choosingTile) {
+				chooseTile(explorationTiles.members[1]);
+			}
 		}
 		
 		public function chooseTile(tile:Tile):void {
